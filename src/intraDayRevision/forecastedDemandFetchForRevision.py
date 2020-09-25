@@ -15,7 +15,7 @@ class ForecastedDemandFetchForRevisionRepo():
         """
         self.connString = con_string
     
-     def toListOfTuple(self,df:pd.core.frame.DataFrame) -> List[Tuple]:
+    def toListOfTuple(self,df:pd.core.frame.DataFrame) -> List[Tuple]:
         """convert forecasted BLOCKWISE demand data to list of tuples[(timestamp,entityTag,demandValue),]
         Args:
             df (pd.core.frame.DataFrame): forecasted block wise demand dataframe
@@ -43,7 +43,7 @@ class ForecastedDemandFetchForRevisionRepo():
         """
         # startTime = b+3 block        
         startTime = end_Time + dt.timedelta(minutes= 46)
-        
+
         #endTime will today last block if not in 22:30 - 22:45 revision block else tommorows last block 
         currdate = dt.datetime.now().replace(hour =0 ,minute =0,second=0, microsecond=0)
         startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
