@@ -14,8 +14,11 @@ def doIntradayRevision(startTime: dt.datetime, endTime: dt.datetime, configDict 
     obj_revisedForecastInsertionRepo = RevisedDemandForecastInsertionRepo(conString)
 
     isRevisionSuccessCount = 0
+    countRevision = 0
     # listOfEntity =['WRLDCMP.SCADA1.A0046945','WRLDCMP.SCADA1.A0046948','WRLDCMP.SCADA1.A0046953','WRLDCMP.SCADA1.A0046957','WRLDCMP.SCADA1.A0046962','WRLDCMP.SCADA1.A0046978','WRLDCMP.SCADA1.A0046980','WRLDCMP.SCADA1.A0047000']
-    listOfEntity =['WRLDCMP.SCADA1.A0047000']
+    # listOfEntity =['WRLDCMP.SCADA1.A0047000']
+    listOfEntity =['WRLDCMP.SCADA1.A0046945']
+
     for entity in listOfEntity:
         #fetch last 6 block actual demand
         actualDemandDf = fetchDemandDataFromApi(startTime,endTime,entity,configDict)
@@ -28,14 +31,15 @@ def doIntradayRevision(startTime: dt.datetime, endTime: dt.datetime, configDict 
        
         # avgbiasErrorPercentage = avgBiasError*100
         if abs(avgBiasError*100)>1:
+            countRevision = countRevision + 1
             # do revision in next time blocks from B+3
             revisedForecastData :List[Tuple] = obj_forecastedDemandFetchForRevisionRepo.fetchForecastedDemandForRevision(startTime, endTime, entity, avgBiasError)
             # insert revised forecasted demand in db
             isRevisionSuccess = obj_revisedForecastInsertionRepo.insertRevisedDemandForecast(revisedForecastData)
-        if isRevisionSuccess:
-            isRevisionSuccessCount = isRevisionSuccessCount +1
+            if isRevisionSuccess:
+                isRevisionSuccessCount = isRevisionSuccessCount +1
     
-    if isRevisionSuccessCount == 8:
+    if isRevisionSuccessCount == countRevision :
         return True
     else:
         return False

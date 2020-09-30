@@ -8,9 +8,9 @@ from src.intraDayRevision.intradayRevisionCreator import doIntradayRevision
 
 configDict=getAppConfigDict()
 
-currTime = dt.datetime.strftime(dt.datetime.now(), '%Y-%m-%d %H:%M:%S')
+# currTime = dt.datetime.strftime(dt.datetime.now(), '%Y-%m-%d %H:%M:%S')
 # currTime = dt.datetime.strptime("2020-09-14 04:40:56", '%Y-%m-%d %H:%M:%S')
-# currTime = "2020-09-24 04:40:56"
+currTime = "2020-09-25 03:10:56"
 parser = argparse.ArgumentParser()
 parser.add_argument('--curr_time', help="Enter Start time in yyyy-mm-dd HH:MM:SS format",
                     default = currTime)
@@ -25,5 +25,5 @@ while (endTime.minute % 15) != 14:
     
 startTime = endTime - dt.timedelta(hours=1 ,minutes=29)
 print(startTime,endTime)
-doIntradayRevision(startTime,endTime,configDict)
+print(doIntradayRevision(startTime,endTime,configDict))
 

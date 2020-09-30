@@ -73,19 +73,19 @@ def fetchDemandDataFromApi(startTime: dt.datetime,endTime: dt.datetime, entityTa
     apiBaseUrl: str = configDict['apiBaseUrl']
     clientId = configDict['clientId']
     clientSecret = configDict['clientSecret']
-
     
     #creating object of ScadaApiFetcher class 
     obj_scadaApiFetcher = ScadaApiFetcher(tokenUrl, apiBaseUrl, clientId, clientSecret)
 
     # fetching secondwise data from api for each entity(timestamp,value) and converting to dataframe
     resData = obj_scadaApiFetcher.fetchData(entityTag, startTime, startTime)
+  
     demandDf = pd.DataFrame(resData, columns =['timestamp','demandValue']) 
-    
+    #filtering for 6 blocks only
     demandDf = demandDf[(demandDf['timestamp'] >= startTime) & (demandDf['timestamp'] <= endTime)]
     #converting to minutewise data and adding entityName column to dataframe
     demandDf = toMinuteWiseData(demandDf,entityTag)
-    # print(demandDf)
+    
     
     #applying filtering logic
     filteredDemandDf = applyFilteringToDf(demandDf,entityTag)

@@ -2,8 +2,8 @@ import cx_Oracle
 import datetime as dt
 from typing import List, Tuple
 
-class RevisionInsertion():
-    """repository to push revised forecasted demand of entities with revision number to db.
+class MwErrorInsertion():
+    """repository to push mw error and % mw error of entities with revision number to db.
     """
 
     def __init__(self, con_string: str) -> None:
@@ -13,11 +13,11 @@ class RevisionInsertion():
         """
         self.connString = con_string
 
-    def insertRevisedDemandForecast(self, data: List[Tuple]) -> bool:
-        """Insert blockwise revised forecasted demand of entities with revision number to db
+    def insertMwError(self, data: List[Tuple]) -> bool:
+        """Insert blockwise mw error and % mw error of entities with revision number to db
         Args:
             self : object of class 
-            data (List[Tuple]): (timestamp, entityTag, revisionNo, forecastedDemand)
+            data (List[Tuple]): (timestamp, entityTag, revisionNo, mwError, %mwError)
         Returns:
             bool: return true if insertion is successful else false
         """
@@ -39,9 +39,9 @@ class RevisionInsertion():
                 cur = connection.cursor()
                 try:
                     cur.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' ")
-                    del_sql = "DELETE FROM forecast_revision_store WHERE time_stamp = :1 and entity_tag=:2 and revision_no =:3"
+                    del_sql = "DELETE FROM mw_error_store WHERE time_stamp = :1 and entity_tag=:2 and revision_no =:3"
                     cur.executemany(del_sql, existingRows)
-                    insert_sql = "INSERT INTO forecast_revision_store(time_stamp,ENTITY_TAG,revision_no,forecasted_demand_value) VALUES(:1, :2, :3, :4)"
+                    insert_sql = "INSERT INTO mw_error_store(time_stamp, ENTITY_TAG, revision_no, mw_error, percentage_mw_error) VALUES(:1, :2, :3, :4, :5)"
                     cur.executemany(insert_sql, data)
                 except Exception as e:
                     print("error while insertion/deletion->", e)
@@ -54,5 +54,5 @@ class RevisionInsertion():
         finally:
             cur.close()
             connection.close()
-            print("demand forecast with revision no. storage complete")
+            print("blockwise mw error/%mw error with revision no. storage complete")
         return isInsertionSuccess
