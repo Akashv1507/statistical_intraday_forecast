@@ -26,6 +26,7 @@ parser.add_argument('--revision_no', help="Enter revision no",
 args = parser.parse_args()
 startDate = dt.strptime(args.start_date, '%Y-%m-%d')
 endDate = dt.strptime(args.end_date, '%Y-%m-%d')
+revisionNo = args.revision_no
 
 startDate = startDate.replace(hour=0, minute=0, second=0, microsecond=0)
 endDate = endDate.replace(hour=0, minute=0, second=0, microsecond=0)
