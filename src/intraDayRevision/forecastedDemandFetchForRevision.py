@@ -46,12 +46,12 @@ class ForecastedDemandFetchForRevisionRepo():
 
         #endTime will today last block if not in 22:30 - 22:45 revision block else tommorows last block 
         currdate = dt.datetime.now().replace(hour =0 ,minute =0,second=0, microsecond=0)
-        # currdate = dt.datetime.strptime("2020-09-24 22:40:56", '%Y-%m-%d %H:%M:%S').replace(hour =0 ,minute =0,second=0, microsecond=0)
+        # currdate = dt.datetime.strptime("2020-09-22 22:40:56", '%Y-%m-%d %H:%M:%S').replace(hour =0 ,minute =0,second=0, microsecond=0)
         startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
         endExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 45) 
 
         if startExceptionTime <= dt.datetime.now() < endExceptionTime:
-        # if startExceptionTime <= dt.datetime.strptime("2020-09-24 22:40:56", '%Y-%m-%d %H:%M:%S') < endExceptionTime:
+        # if startExceptionTime <= dt.datetime.strptime("2020-09-22 22:40:56", '%Y-%m-%d %H:%M:%S') < endExceptionTime:
             endTime = currdate + dt.timedelta(days=1, hours=23, minutes=59)
         else:
             endTime = currdate + dt.timedelta(hours=23, minutes=59)
@@ -66,7 +66,8 @@ class ForecastedDemandFetchForRevisionRepo():
             print(connection.version)
             try:
                 cur = connection.cursor()
-                fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity ORDER BY time_stamp"
+                #fetch r0a forecast between startTime and endTime
+                fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no = 'R0A' ORDER BY time_stamp"
                 cur.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' ")
                 forecastedDemandDf = pd.read_sql(fetch_sql, params={
                                  'start_time': startTime, 'end_time': endTime, 'entity':entityTag}, con=connection)
@@ -83,6 +84,8 @@ class ForecastedDemandFetchForRevisionRepo():
         print("retrieval of forecasted demand for revision completed")
         
         #applying DA R0 forecast*(1+avg forecast bias error)
+        
         forecastedDemandDf['FORECASTED_DEMAND_VALUE'] = forecastedDemandDf['FORECASTED_DEMAND_VALUE']*(1+avgBiasError)
+        
         data : List[Tuple] = self.toListOfTuple(forecastedDemandDf)
         return data
