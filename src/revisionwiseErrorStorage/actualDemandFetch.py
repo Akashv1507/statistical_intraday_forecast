@@ -16,17 +16,26 @@ class ActualDemandFetchRepo():
         self.connString = con_string
 
     def fetchActualDemand(self, startDate:dt.datetime, endDate:dt.datetime) ->pd.core.frame.DataFrame:
+        """fetch actual demand of a day
+
+        Args:
+            startDate (dt.datetime): start date
+            endDate (dt.datetime): end date
+
+        Returns:
+            pd.core.frame.DataFrame: dataframe that contains actual demand
+        """    
 
         start_time_value = startDate
         end_time_value = endDate + dt.timedelta(hours=23, minutes= 59)
         try:
-            # connString=configDict['con_string_local']
+            
             connection = cx_Oracle.connect(self.connString)
 
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
+            
             try:
                 cur = connection.cursor()
                 fetch_sql = "SELECT time_stamp, entity_tag, demand_value FROM derived_blockwise_demand WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') ORDER BY entity_tag, time_stamp"

@@ -37,6 +37,15 @@ def filterAction(demandDf :pd.core.frame.DataFrame, minRamp:int)-> pd.core.frame
     return demandDf
             
 def applyFilteringToDf(demandDf:pd.core.frame.DataFrame, entity:str) -> pd.core.frame.DataFrame:
+    """applying filtering logic
+
+    Args:
+        demandDf (pd.core.frame.DataFrame): unfiltered demand dataframe
+        entity (str): entityTag
+
+    Returns:
+        pd.core.frame.DataFrame: filtered demand dataframe
+    """    
 
     #500,200,1000,2000 are min to min ramp of entities 
     if entity == 'WRLDCMP.SCADA1.A0046945':
@@ -68,6 +77,17 @@ def toBlockwiseDemand(minwiseDemandDf: pd.core.frame.DataFrame, entityTag:str) -
         return blockwiseDemandDf
 
 def fetchDemandDataFromApi(startTime: dt.datetime,endTime: dt.datetime, entityTag:str, configDict: dict)->pd.core.frame.DataFrame :
+    """fetch demand data from api for a particular entity and returns dataframe
+
+    Args:
+        startTime (dt.datetime): startTime
+        endTime (dt.datetime): endTime
+        entityTag (str): entityTag
+        configDict (dict): application configuration
+
+    Returns:
+        pd.core.frame.DataFrame: return actual demand dataframe
+    """    
       
     tokenUrl: str = configDict['tokenUrl']
     apiBaseUrl: str = configDict['apiBaseUrl']
@@ -86,10 +106,8 @@ def fetchDemandDataFromApi(startTime: dt.datetime,endTime: dt.datetime, entityTa
     #converting to minutewise data and adding entityName column to dataframe
     demandDf = toMinuteWiseData(demandDf,entityTag)
     
-    
     #applying filtering logic
     filteredDemandDf = applyFilteringToDf(demandDf,entityTag)
-    # print(filteredDemandDf)
     # resampling to blockwise demand
     blockwiseDf = toBlockwiseDemand(filteredDemandDf,entityTag)
 

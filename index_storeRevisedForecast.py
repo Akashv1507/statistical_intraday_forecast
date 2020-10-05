@@ -1,8 +1,9 @@
+"""index file for storing revisions
+"""
 import argparse
 import datetime as dt
 from src.appConfig import getAppConfigDict
 from src.storeRevisedForecast.revisedForecastStorage import storeRevisedForecast
-
 
 configDict=getAppConfigDict()
 
@@ -34,6 +35,9 @@ endTime = startTime + dt.timedelta(hours= 23, minutes= 59)
 revisionNoStr = "R" + str(revisionNo)
 
 isRevisionStorageSuccess = storeRevisedForecast(startTime, endTime, revisionNoStr, configDict)
-print(isRevisionStorageSuccess)
+if isRevisionStorageSuccess:
+    print(f'revision number {revisionNoStr} storage successfull')
+else:
+    print(f'revision number {revisionNoStr} storage unsuccessfull')
 
 

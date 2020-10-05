@@ -2,7 +2,19 @@ import pandas as pd
 from typing import List, Tuple
 import datetime as dt
 
-def calculateRevisionwiseErrors(actualDemandDf:pd.core.frame.DataFrame, forecastedDemandDf:pd.core.frame.DataFrame, revisionNo:str, currDate:dt.date)->float:
+def calculateRevisionwiseErrors(actualDemandDf:pd.core.frame.DataFrame, forecastedDemandDf:pd.core.frame.DataFrame, revisionNo:str, currDate:dt.date)->List[Tuple]:
+    """calculate MAE, MAPE, RMSE, RMSE% and returns list of tuples
+
+    Args:
+        actualDemandDf (pd.core.frame.DataFrame):actual demand dataframe
+        forecastedDemandDf (pd.core.frame.DataFrame):forecasted demand dataframe
+        revisionNo (str): revision number
+        currDate (dt.date):current date
+
+    Returns:
+        List[Tuple]: [(currDate, entity, revisionNo, mae, mape, rmse, rmsePercentage),]
+    """    
+    
     mwErrorDf = actualDemandDf 
 
     # calculating MAE, MAPE, RMSE, RMSE%

@@ -32,14 +32,14 @@ class RevisedForecastedDemandFetchRepo():
         return revisedDemandData
 
 
-    def fetchRevisedForecastedDemand(self, startTime: dt.datetime, endTime: dt.datetime, revisionNo:str) -> pd.core.frame.DataFrame:
+    def fetchRevisedForecastedDemand(self, startTime: dt.datetime, endTime: dt.datetime, revisionNo:str) -> List[Tuple]:
         """fetch forecasted demand and return dataframe of it
         Args:
             startTime (dt.datetime): start time
             endTime (dt.datetime): end time
             revision no. (str): revision Number
         Returns:
-            pd.core.frame.DataFrame: forecasted demand value of entity between startTime and endTime
+            List[Tuple] : [(timestamp, entityTag, forecastedDemandValue),]
         """   
         #used only if R16 revision, that will be R0B revision for tomorrow     
         startTimeTomorrow = startTime + dt.timedelta(days=1)
@@ -56,7 +56,7 @@ class RevisedForecastedDemandFetchRepo():
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
+            
             try:
                 cur = connection.cursor()
                 fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') ORDER BY time_stamp"
@@ -65,7 +65,7 @@ class RevisedForecastedDemandFetchRepo():
                                  'start_time': startTime, 'end_time': endTime}, con=connection)
                 forecastedDemandDf['REVISION_NO'] = revisionNo
                 revisedForecastedData : List[Tuple] =self.toListOfTuple(forecastedDemandDf)
-                # print(forecastedDemandDf)
+                
                 #check for last revision, fetch tommorow forecast, add R0B to each tuple
                 if revisionNo == 'R16':
                     fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') ORDER BY time_stamp"
@@ -74,7 +74,7 @@ class RevisedForecastedDemandFetchRepo():
                                     'start_time': startTimeTomorrow, 'end_time': endTimeTomorrow}, con=connection)
                     forecastedDemandDfR0B['REVISION_NO'] = 'R0B'
                     revisedForecastedDataR0B : List[Tuple] =self.toListOfTuple(forecastedDemandDfR0B)
-                    # print(forecastedDemandDfR0B)
+                   
             except Exception as err:
                 print('error while creating a cursor', err)
             else:
@@ -82,10 +82,7 @@ class RevisedForecastedDemandFetchRepo():
         finally:
             cur.close()
             connection.close()
-            print("connection closed")
-
+            
         print("retrieval of forecasted demand completed")
         joinedForecastesData: List[Tuple] = [*revisedForecastedData, *revisedForecastedDataR0B]
-        # print(joinedForecastesData)
-        # print(len(joinedForecastesData))
         return joinedForecastesData

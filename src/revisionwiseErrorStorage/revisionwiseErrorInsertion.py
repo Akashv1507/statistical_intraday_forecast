@@ -34,7 +34,6 @@ class RevisionwiseErrorInsertion():
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
             try:
                 cur = connection.cursor()
                 try:

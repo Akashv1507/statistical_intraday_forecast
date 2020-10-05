@@ -35,7 +35,6 @@ class ForecastedDemandFetchRepo():
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
             try:
                 cur = connection.cursor()
                 fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no = 'R0A' ORDER BY time_stamp"

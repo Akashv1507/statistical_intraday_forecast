@@ -1,3 +1,5 @@
+"""index file for intraday revision
+"""
 import argparse
 import datetime as dt
 from src.appConfig import getAppConfigDict
@@ -21,6 +23,10 @@ while (endTime.minute % 15) != 14:
     endTime = endTime - dt.timedelta(minutes=1)
     
 startTime = endTime - dt.timedelta(hours=1 ,minutes=29)
-print(startTime,endTime)
-print(doIntradayRevision(startTime,endTime,configDict))
+# print(startTime,endTime)
+isRevisionSuccess = doIntradayRevision(startTime,endTime,configDict)
 
+if isRevisionSuccess:
+    print(f" revision successfull for for block {startTime} and {endTime} ")
+else:
+    print(f" revision unsuccessfull for for block {startTime} and {endTime} ")

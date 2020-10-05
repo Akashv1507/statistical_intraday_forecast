@@ -34,7 +34,6 @@ class MwErrorInsertion():
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
             try:
                 cur = connection.cursor()
                 try:
@@ -43,16 +42,21 @@ class MwErrorInsertion():
                     cur.executemany(del_sql, existingRows)
                     insert_sql = "INSERT INTO mw_error_store(time_stamp, ENTITY_TAG, revision_no, mw_error, percentage_mw_error) VALUES(:1, :2, :3, :4, :5)"
                     cur.executemany(insert_sql, data)
+
                 except Exception as e:
                     print("error while insertion/deletion->", e)
                     isInsertionSuccess = False
+
             except Exception as err:
                 print('error while creating a cursor', err)
                 isInsertionSuccess = False
+
             else:
                 connection.commit()
+
         finally:
             cur.close()
             connection.close()
             print("blockwise mw error/%mw error with revision no. storage complete")
+            
         return isInsertionSuccess

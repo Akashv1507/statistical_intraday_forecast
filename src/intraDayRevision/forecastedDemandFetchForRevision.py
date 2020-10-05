@@ -56,14 +56,12 @@ class ForecastedDemandFetchForRevisionRepo():
         else:
             endTime = currdate + dt.timedelta(hours=23, minutes=59)
 
-        try:
-            # connString=configDict['con_string_local']
+        try: 
             connection = cx_Oracle.connect(self.connString)
 
         except Exception as err:
             print('error while creating a connection', err)
         else:
-            print(connection.version)
             try:
                 cur = connection.cursor()
                 #fetch r0a forecast between startTime and endTime

@@ -20,6 +20,7 @@ def createBlockwiseError(startDate: dt.datetime, endDate: dt.datetime, revisionN
     """    
 
     con_string = configDict['con_string_mis_warehouse']
+    #creating instance of classes
     obj_actualDemandFetchRepo = ActualDemandFetchRepo(con_string)
     obj_forecastedDemandFetchRepo = ForecastedDemandFetchRepo(con_string)
     obj_mwErrorInsertion = MwErrorInsertion(con_string)
@@ -28,9 +29,16 @@ def createBlockwiseError(startDate: dt.datetime, endDate: dt.datetime, revisionN
     insertSuccessCount = 0
 
     while currDate <= endDate:
+        #fetch actual demand
         actualDemandDf = obj_actualDemandFetchRepo.fetchActualDemand(currDate, currDate)
+
+        #fetch forecasted demand
         forecastedDemandDf = obj_forecastedDemandFetchRepo.fetchForecastedDemand(currDate, currDate, revisionNo)
+
+        #calculate blockwise mw error
         data:List[Tuple] = calculateMwError(actualDemandDf, forecastedDemandDf, revisionNo)
+
+        #push error to db
         isInsertionSuccess = obj_mwErrorInsertion.insertMwError(data)
 
         if isInsertionSuccess:

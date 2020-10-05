@@ -1,3 +1,5 @@
+"""index file for blockwise Mw error creator
+"""
 import argparse
 from datetime import datetime as dt
 from datetime import timedelta
@@ -10,8 +12,6 @@ configDict=getAppConfigDict()
 endDate = dt.now() - timedelta(days=1)
 startDate = endDate - timedelta(days=2)
 
-# startDate = dt.strptime("2020-08-25", '%Y-%m-%d')
-# endDate = dt.strptime("2020-09-08", '%Y-%m-%d')
 revisionNo = 'R0A'
 
 # get start, end dates and revision number from command line
