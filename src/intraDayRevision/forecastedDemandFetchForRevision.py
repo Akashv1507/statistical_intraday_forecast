@@ -46,12 +46,12 @@ class ForecastedDemandFetchForRevisionRepo():
 
         #endTime will today last block if not in 22:30 - 22:45 revision block else tommorows last block 
         currdate = dt.datetime.now().replace(hour =0 ,minute =0,second=0, microsecond=0)
-        # currdate = dt.datetime.strptime("2020-09-22 22:40:56", '%Y-%m-%d %H:%M:%S').replace(hour =0 ,minute =0,second=0, microsecond=0)
+        # currdate = dt.datetime.strptime("2020-10-13 15:10:56", '%Y-%m-%d %H:%M:%S').replace(hour =0 ,minute =0,second=0, microsecond=0)
         startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
         endExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 45) 
 
         if startExceptionTime <= dt.datetime.now() < endExceptionTime:
-        # if startExceptionTime <= dt.datetime.strptime("2020-09-22 22:40:56", '%Y-%m-%d %H:%M:%S') < endExceptionTime:
+        # if startExceptionTime <= dt.datetime.strptime("2020-10-13 15:10:56", '%Y-%m-%d %H:%M:%S') < endExceptionTime:
             endTime = currdate + dt.timedelta(days=1, hours=23, minutes=59)
         else:
             endTime = currdate + dt.timedelta(hours=23, minutes=59)
@@ -77,7 +77,6 @@ class ForecastedDemandFetchForRevisionRepo():
         finally:
             cur.close()
             connection.close()
-            print("connection closed")
 
         print("retrieval of forecasted demand for revision completed")
         

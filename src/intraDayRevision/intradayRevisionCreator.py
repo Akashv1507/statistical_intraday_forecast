@@ -37,7 +37,7 @@ def doIntradayRevision(startTime: dt.datetime, endTime: dt.datetime, configDict 
 
         #calculate avg bias error
         avgBiasError = calculateAvgBiasError(actualDemandDf, forecastedDemandDf)
-        print(f"avg bias error = {avgBiasError}")
+        # print(f"avg bias error = {avgBiasError}")
 
         # avgbiasErrorPercentage = avgBiasError*100
         if abs(avgBiasError*100)>1:
