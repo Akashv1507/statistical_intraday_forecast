@@ -78,8 +78,6 @@ class ForecastedDemandFetchForRevisionRepo():
             cur.close()
             connection.close()
 
-        print("retrieval of forecasted demand for revision completed")
-        
         #applying DA R0 forecast*(1+avg forecast bias error)
         
         forecastedDemandDf['FORECASTED_DEMAND_VALUE'] = forecastedDemandDf['FORECASTED_DEMAND_VALUE']*(1+avgBiasError)

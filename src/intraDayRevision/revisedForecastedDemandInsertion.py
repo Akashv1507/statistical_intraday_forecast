@@ -54,5 +54,4 @@ class RevisedDemandForecastInsertionRepo():
         finally:
             cur.close()
             connection.close()
-            print("Revised demand forecast insertion complete")
         return isInsertionSuccess
