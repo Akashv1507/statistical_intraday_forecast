@@ -10,7 +10,7 @@ from src.blockwiseErrorStorage.blockwiseErrorCreator import createBlockwiseError
 configDict=getAppConfigDict()
 
 endDate = dt.now() - timedelta(days=1)
-startDate = endDate - timedelta(days=2)
+startDate = endDate - timedelta(days=1)
 
 revisionNo = 'R0A'
 

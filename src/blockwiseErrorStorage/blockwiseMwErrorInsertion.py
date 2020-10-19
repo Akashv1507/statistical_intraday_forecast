@@ -57,6 +57,5 @@ class MwErrorInsertion():
         finally:
             cur.close()
             connection.close()
-            print("blockwise mw error/%mw error with revision no. storage complete")
-            
+            # print("blockwise mw error/%mw error with revision no. storage complete")    
         return isInsertionSuccess

@@ -53,5 +53,5 @@ class RevisionwiseErrorInsertion():
         finally:
             cur.close()
             connection.close()
-            print("revisionwise mae , mape, rmse, rmse_percentage error with revision no. storage complete")
+            # print("revisionwise mae , mape, rmse, rmse_percentage error with revision no. storage complete")
         return isInsertionSuccess

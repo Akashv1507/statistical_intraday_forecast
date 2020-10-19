@@ -50,5 +50,4 @@ class ActualDemandFetchRepo():
         finally:
             cur.close()
             connection.close()
-            print("actual demand fetch complete")
         return blockwiseDemandDf

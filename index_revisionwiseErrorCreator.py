@@ -7,7 +7,7 @@ from src.revisionwiseErrorStorage.revisionwiseErrorCreator import createRevision
 configDict=getAppConfigDict()
 
 endDate = dt.now() - timedelta(days=1)
-startDate = endDate - timedelta(days=2)
+startDate = endDate 
 
 # get start, end dates from command line
 parser = argparse.ArgumentParser()

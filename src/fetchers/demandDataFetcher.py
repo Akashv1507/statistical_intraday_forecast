@@ -46,7 +46,6 @@ def applyFilteringToDf(demandDf:pd.core.frame.DataFrame, entity:str) -> pd.core.
     Returns:
         pd.core.frame.DataFrame: filtered demand dataframe
     """    
-
     #500,200,1000,2000 are min to min ramp of entities 
     if entity == 'WRLDCMP.SCADA1.A0046945':
         filteredDemandDf = filterAction(demandDf, 500)
@@ -113,7 +112,7 @@ def fetchDemandDataFromApi(startTime: dt.datetime,endTime: dt.datetime, entityTa
 
     #applying filtering logic
     filteredDemandDf = applyFilteringToDf(demandDf,entityTag)
-    
+
     # resampling to blockwise demand
     blockwiseDf = toBlockwiseDemand(filteredDemandDf,entityTag)
 

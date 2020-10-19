@@ -51,5 +51,4 @@ class ForecastedDemandFetchRepo():
         finally:
             cur.close()
             connection.close()
-            print("forecasted demand fetch complete")
         return forecastedDemandDf
