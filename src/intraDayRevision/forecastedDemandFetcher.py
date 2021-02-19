@@ -27,6 +27,16 @@ class ForecastedDemandFetchRepo():
         Returns:
             pd.core.frame.DataFrame: forecasted demand value of entity between startTime and endTime
         """        
+        currdate = dt.datetime.now().replace(hour =0 ,minute =0,second=0, microsecond=0)
+        startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
+        endExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 59) 
+
+        if startExceptionTime <= dt.datetime.now() < endExceptionTime:
+       
+            fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no='R0A' ORDER BY time_stamp"
+           
+        else:
+            fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity ORDER BY time_stamp"
 
         try:
             # connString=configDict['con_string_local']
@@ -37,7 +47,6 @@ class ForecastedDemandFetchRepo():
         else:
             try:
                 cur = connection.cursor()
-                fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity ORDER BY time_stamp"
                 cur.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' ")
                 forecastedDemandDf = pd.read_sql(fetch_sql, params={
                                  'start_time': startTime, 'end_time': endTime, 'entity':entityTag}, con=connection)

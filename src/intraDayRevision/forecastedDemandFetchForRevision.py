@@ -53,8 +53,12 @@ class ForecastedDemandFetchForRevisionRepo():
         if startExceptionTime <= dt.datetime.now() < endExceptionTime:
         # if startExceptionTime <= dt.datetime.strptime("2021-01-29 00:10:40", '%Y-%m-%d %H:%M:%S') < endExceptionTime:
             endTime = currdate + dt.timedelta(days=1, hours=23, minutes=59)
+            fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no='R0A' ORDER BY time_stamp"
+
         else:
             endTime = currdate + dt.timedelta(hours=23, minutes=59)
+            fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity ORDER BY time_stamp"
+
 
         try: 
             connection = cx_Oracle.connect(self.connString)
@@ -66,7 +70,6 @@ class ForecastedDemandFetchForRevisionRepo():
                 cur = connection.cursor()
                 #fetch r0a forecast between startTime and endTime
                 # fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no = 'R0A' ORDER BY time_stamp"
-                fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM dayahead_demand_forecast WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity ORDER BY time_stamp"
                 cur.execute("ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' ")
                 forecastedDemandDf = pd.read_sql(fetch_sql, params={
                                  'start_time': startTime, 'end_time': endTime, 'entity':entityTag}, con=connection)
