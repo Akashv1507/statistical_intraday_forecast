@@ -31,7 +31,7 @@ class ForecastedDemandFetchRepo():
         startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
         endExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 59) 
 
-        x=10     # any random minute value between 1 to 14
+        x=11     # any random minute value between 1 to 15
 
         if startExceptionTime <= (endTime+dt.timedelta(minutes=x))< endExceptionTime:
        
