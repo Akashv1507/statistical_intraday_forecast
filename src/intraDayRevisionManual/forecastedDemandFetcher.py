@@ -26,14 +26,15 @@ class ForecastedDemandFetchRepo():
 
         Returns:
             pd.core.frame.DataFrame: forecasted demand value of entity between startTime and endTime
-        """        
-        currdate = startTime.replace(hour =0 ,minute =0,second=0, microsecond=0)
+        """  
+        #any value between 1 to 15 , setting current time manually without using dt.now()   
+        x = 11 
+        currTime = endTime +dt.timedelta(minutes=x)
+        currdate = currTime.replace(hour =0 ,minute =0,second=0, microsecond=0)
         startExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 30) 
         endExceptionTime = currdate + dt.timedelta(hours = 22, minutes= 59) 
 
-        x=11     # any random minute value between 1 to 15
-
-        if startExceptionTime <= (endTime+dt.timedelta(minutes=x))< endExceptionTime:
+        if startExceptionTime <= currTime< endExceptionTime:
        
             fetch_sql = "SELECT time_stamp, entity_tag, forecasted_demand_value FROM forecast_revision_store WHERE time_stamp BETWEEN TO_DATE(:start_time,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(:end_time,'YYYY-MM-DD HH24:MI:SS') and entity_tag =:entity and revision_no='R0A' ORDER BY time_stamp"
            

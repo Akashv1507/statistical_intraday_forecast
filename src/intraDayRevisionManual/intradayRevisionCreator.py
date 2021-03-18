@@ -34,7 +34,7 @@ def doIntradayRevision(startTime: dt.datetime, endTime: dt.datetime, configDict 
         
         #fetch last 6 block forecasted demand
         forecastedDemandDf = obj_forecastedDemandFetchRepo.fetchForecastedDemand(startTime,endTime,entity)
-
+        
         #calculate avg bias error
         avgBiasError = calculateAvgBiasError(actualDemandDf, forecastedDemandDf)
         # print(f"avg bias error = {avgBiasError}")
